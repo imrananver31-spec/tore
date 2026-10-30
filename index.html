@@ -1,0 +1,713 @@
+<title>Кофейня Обжарка 47</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800;900&family=Manrope:wght@400;500;600;700;800&display=swap">
+<style>
+/* Layout: fixed scroll-scrubbed espresso video behind everything; dark glass cards float over it; content in a 1240px column. Single dark look by design. */
+:root{
+  --bg:#0d0b0a;
+  --ink:#f6f1ec;
+  --muted:#b5aba3;
+  --card:rgba(24,20,18,.86);
+  --card-solid:#1a1614;
+  --line:rgba(255,255,255,.09);
+  --red:#e3342b;
+  --red-hi:#ff4a3d;
+  --cream:#e9d6c0;
+  --f-display:"Unbounded","Arial Black",system-ui,sans-serif;
+  --f-body:"Manrope",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --r:10px;
+  --gut:max(16px,env(safe-area-inset-left,0px));
+  --gut-r:max(16px,env(safe-area-inset-right,0px));
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+/* off-screen reveal states must never widen the page (iOS ignores overflow-x on body) */
+main,footer{overflow-x:hidden;overflow-x:clip}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+:focus-visible{outline:2px solid var(--red-hi);outline-offset:3px;border-radius:6px}
+
+/* ---------- background video ---------- */
+.bg{position:fixed;inset:0;z-index:-2;overflow:hidden;background:#000}
+.bg video{opacity:0;transition:opacity .6s}.bg video.on{opacity:1}
+.bg video,.bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.bg .blurred{opacity:var(--bl,0);transform:scale(1.06)}
+.bg .shade{position:absolute;inset:0;background:#0d0b0a;opacity:var(--dk,0)}
+.bg::after{content:"";position:absolute;inset:0;background:
+  radial-gradient(130% 90% at 50% 40%,rgba(0,0,0,0) 0%,rgba(0,0,0,.18) 70%,rgba(0,0,0,.5) 100%),
+  linear-gradient(180deg,rgba(13,11,10,.25) 0%,rgba(13,11,10,var(--shade,.15)) 100%)}
+
+/* ---------- header ---------- */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:rgba(13,11,10,.9)}
+.hdr{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;padding-left:var(--gut);padding-right:var(--gut-r);transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
+.hdr.solid{background:rgba(13,11,10,.94);border-color:var(--line)}
+.hdr-in{max-width:1240px;margin:0 auto;display:flex;align-items:center;gap:28px;height:68px}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-weight:800;font-size:15px;letter-spacing:.02em;white-space:nowrap}
+.logo svg{width:26px;height:26px;flex:none}
+.logo .badge{background:var(--red);color:#fff;font-size:11px;padding:4px 7px 3px;border-radius:4px;letter-spacing:.06em}
+.nav{display:flex;gap:26px;font-size:13px;font-weight:600;color:var(--muted);margin-left:8px}
+.nav a{transition:color .2s}
+.nav a:hover{color:var(--ink)}
+.hdr-r{margin-left:auto;display:flex;align-items:center;gap:14px}
+.phone{font-size:13px;font-weight:700;white-space:nowrap}
+.phone small{display:block;font-weight:500;color:var(--muted);font-size:11px;line-height:1.1}
+.cart{position:relative;display:grid;place-items:center;width:40px;height:40px;border-radius:8px;background:rgba(255,255,255,.07);border:1px solid var(--line)}
+.cart svg{width:19px;height:19px}
+.cart b{position:absolute;top:-6px;right:-6px;min-width:19px;height:19px;padding:0 5px;border-radius:10px;background:var(--red);font-size:11px;display:grid;place-items:center;transform:scale(0);transition:transform .25s cubic-bezier(.3,1.6,.5,1)}
+.cart b.on{transform:scale(1)}
+.cart.bump{animation:bump .4s}
+@keyframes bump{40%{transform:scale(1.15)}}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:40px;padding:0 18px;border-radius:7px;font-size:13px;font-weight:700;white-space:nowrap;transition:background .2s,transform .15s,border-color .2s}
+.btn:active{transform:translateY(1px)}
+.btn-red{background:var(--red);color:#fff}
+.btn-red:hover{background:var(--red-hi)}
+.btn-ghost{border:1px solid rgba(255,255,255,.18);color:var(--ink)}
+.btn-ghost:hover{border-color:rgba(255,255,255,.45)}
+.burger{display:none;width:40px;height:40px;border-radius:8px;border:1px solid var(--line)}
+.burger span{display:block;width:18px;height:2px;background:var(--ink);margin:4px auto;border-radius:2px}
+
+/* ---------- hero ---------- */
+.hero{position:relative;min-height:min(820px,100svh);padding:40px var(--gut-r) 70px var(--gut);display:flex;flex-direction:column;align-items:center}
+.pill{display:inline-flex;align-items:center;gap:10px;margin-top:4vh;padding:7px 14px;border-radius:30px;background:rgba(15,12,11,.7);border:1px solid var(--line);font-size:12px;font-weight:600;color:var(--cream);}
+.pill i{font-style:normal;background:var(--red);color:#fff;border-radius:20px;padding:2px 8px;font-size:11px}
+.pill .dot{width:7px;height:7px;border-radius:50%;background:#4ade80;box-shadow:0 0 0 4px rgba(74,222,128,.18)}
+.h1{font-family:var(--f-display);font-weight:900;text-transform:uppercase;text-align:center;font-size:clamp(34px,6.6vw,92px);line-height:.98;letter-spacing:-.01em;margin:26px 0 0;max-width:15ch;text-wrap:balance;color:#fff;
+  -webkit-text-stroke:1.5px rgba(30,22,18,.55);paint-order:stroke fill;
+  text-shadow:0 2px 0 rgba(0,0,0,.25),0 18px 50px rgba(0,0,0,.45)}
+.h1 .w{display:inline-block;opacity:0;transform:translateY(40%) rotate(2deg);animation:rise .9s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(var(--i)*70ms + .15s)}
+@keyframes rise{to{opacity:1;transform:none}}
+.lead{max-width:46ch;text-align:center;margin:22px auto 0;color:#efe5dc;font-size:16px;font-weight:500;text-shadow:0 1px 2px rgba(0,0,0,.7),0 2px 18px rgba(0,0,0,.85)}
+.hero-cta{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap;justify-content:center}
+.hero-cta .btn{height:48px;padding:0 26px;font-size:14px}
+.hero-cta .btn-ghost{background:rgba(13,11,10,.5);-webkit-;}
+.glass{background:rgba(24,20,18,.95);border:1px solid var(--line);border-radius:var(--r);-webkit-;box-shadow:0 30px 60px -30px rgba(0,0,0,.8)}
+.float{position:absolute;width:280px;padding:18px 18px 16px;display:flex;flex-direction:column;gap:8px}
+.float .ic{width:34px;height:34px;border-radius:8px;background:rgba(227,52,43,.14);display:grid;place-items:center;color:var(--red-hi)}
+.float .ic svg{width:18px;height:18px}
+.float h3{margin:4px 0 0;font-size:14px;font-weight:800;letter-spacing:.01em;text-transform:uppercase}
+.float p{margin:0;font-size:13px;color:var(--muted);line-height:1.45}
+.float a{font-size:12px;font-weight:700;color:var(--red-hi);margin-top:4px;text-decoration:underline;text-underline-offset:3px}
+.f1{left:max(var(--gut),calc(50% - 600px));bottom:90px;transform:translateY(calc(var(--p,0)*-60px))}
+.f2{right:max(var(--gut-r),calc(50% - 600px));bottom:180px;transform:translateY(calc(var(--p,0)*-120px))}
+.scroll-hint{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:8px}
+.scroll-hint span{width:1px;height:34px;background:linear-gradient(var(--ink),transparent);animation:drip 1.8s infinite}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* ---------- marquee ---------- */
+.ticker{position:relative;margin:20px 0 0;height:120px;overflow:hidden}
+.band{position:absolute;left:-5%;width:110%;display:flex;overflow:hidden;white-space:nowrap;font-family:var(--f-display);font-weight:800;font-size:13px;letter-spacing:.08em;text-transform:uppercase;padding:13px 0}
+.band.a{top:22px;background:var(--red);color:#fff;transform:rotate(-2.2deg);z-index:2;box-shadow:0 10px 30px -10px rgba(0,0,0,.6)}
+.band.b{top:40px;background:#16110f;color:var(--cream);transform:rotate(1.6deg);border-block:1px solid var(--line)}
+.track{display:flex;gap:0;animation:mq 38s linear infinite;flex:none}
+.band.b .track{animation-direction:reverse;animation-duration:46s}
+.track span{padding:0 22px;display:inline-flex;align-items:center;gap:22px}
+.track span::after{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;opacity:.7}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* ---------- sections ---------- */
+.wrap{max-width:1240px;margin:0 auto;padding-left:var(--gut);padding-right:var(--gut-r)}
+section{padding-block:70px}
+.sec-head{display:flex;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:26px}
+.sec-head>div{min-width:0;flex:1 1 420px}
+.h2-sm{font-size:clamp(24px,3vw,34px)!important}
+.h2{font-family:var(--f-display);font-weight:900;text-transform:uppercase;font-size:clamp(28px,4.2vw,54px);line-height:1;margin:0;letter-spacing:-.005em;text-wrap:balance;text-shadow:0 10px 40px rgba(0,0,0,.5)}
+.sub{color:var(--muted);margin:12px 0 0;max-width:60ch;font-size:15px}
+.eyebrow{font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--red-hi);margin-bottom:12px;display:block}
+
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+.tab{height:36px;padding:0 15px;border-radius:7px;font-size:13px;font-weight:700;background:rgba(20,16,14,.75);border:1px solid var(--line);color:var(--muted);transition:all .2s}
+.tab:hover{color:var(--ink)}
+.tab[aria-pressed="true"]{background:var(--red);border-color:var(--red);color:#fff}
+.tab sup{font-size:10px;opacity:.75;margin-left:3px}
+
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.card{display:flex;flex-direction:column;overflow:hidden;transition:transform .35s cubic-bezier(.2,.8,.2,1),border-color .3s}
+@media (hover:hover){.card:hover{transform:translateY(-4px);border-color:rgba(255,255,255,.18)}}
+.card .ph{position:relative;aspect-ratio:4/3;overflow:hidden;background:#2a211c;max-width:100%}
+.card .ph img{width:100%;height:100%;object-fit:cover;transition:transform .7s cubic-bezier(.2,.8,.2,1)}
+@media (hover:hover){.card:hover .ph img{transform:scale(1.06)}}
+.card .ph::after{content:"";position:absolute;inset:auto 0 0;height:40%;background:linear-gradient(transparent,rgba(20,16,14,.55))}
+.tag{position:absolute;z-index:1;top:12px;left:12px;font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:5px 8px;border-radius:4px;background:var(--red);color:#fff}
+.tag.dark{background:rgba(13,11,10,.82);color:var(--cream);border:1px solid var(--line)}
+.vol{position:absolute;z-index:1;top:12px;right:12px;font-size:11px;font-weight:700;padding:4px 8px;border-radius:4px;background:rgba(13,11,10,.7);color:var(--ink)}
+.card .bd{padding:16px 18px 18px;display:flex;flex-direction:column;gap:8px;flex:1}
+.card h3{margin:0;font-size:15px;font-weight:800;text-transform:uppercase;letter-spacing:.01em;line-height:1.25}
+.card p{margin:0;color:var(--muted);font-size:13px;line-height:1.5;flex:1}
+.row{display:flex;align-items:center;gap:8px;margin-top:8px}
+.price{font-family:var(--f-display);font-weight:800;font-size:18px;margin-right:auto;white-space:nowrap;font-variant-numeric:tabular-nums}
+.price s{font-family:var(--f-body);font-size:12px;color:var(--muted);font-weight:600;margin-left:6px}
+.row .btn{height:36px;padding:0 13px;font-size:12px}
+.card.hide{display:none}
+
+/* ---------- beans ---------- */
+.beans{display:grid;grid-template-columns:1.15fr 1fr;gap:18px}
+.bean-ph{position:relative;overflow:hidden;min-height:440px}
+.bean-ph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.bean-ph .bag{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(-4deg);width:200px;aspect-ratio:3/4;border-radius:10px 10px 6px 6px;background:linear-gradient(160deg,#2a221e,#120e0c);border:1px solid rgba(255,255,255,.12);box-shadow:0 40px 60px -20px rgba(0,0,0,.85);padding:22px 18px;display:flex;flex-direction:column;gap:10px}
+.bag::before{content:"";position:absolute;left:0;right:0;top:0;height:14px;border-radius:10px 10px 0 0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.08) 0 2px,transparent 2px 5px)}
+.bag .bl{font-family:var(--f-display);font-weight:800;font-size:11px;letter-spacing:.06em;display:flex;align-items:center;gap:6px;margin-top:6px}
+.bag .bl em{font-style:normal;background:var(--red);padding:2px 5px;border-radius:3px;color:#fff;font-size:9px}
+.bag .bn{font-family:var(--f-display);font-weight:900;font-size:15px;overflow-wrap:normal;hyphens:none;line-height:1.05;text-transform:uppercase;margin-top:auto}
+.bag .bm{font-size:10px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.bag .bb{height:6px;border-radius:3px;background:var(--red);width:60%}
+.bag.b2{transform:translate(2%,-44%) rotate(7deg);background:linear-gradient(160deg,#3a2a20,#1a120e);z-index:0;opacity:.95}
+.bag.b2 .bb{background:var(--cream)}
+.bag.b1{transform:translate(-100%,-54%) rotate(-6deg);z-index:1}
+.bean-info{padding:28px;display:flex;flex-direction:column;gap:16px}
+.bean-info h3{font-family:var(--f-display);font-weight:900;text-transform:uppercase;font-size:clamp(22px,2.4vw,30px);line-height:1.05;margin:0}
+.bean-desc{margin:0;color:var(--muted)}
+.notes{display:flex;flex-wrap:wrap;gap:6px}
+.notes span{font-size:12px;font-weight:700;padding:5px 10px;border-radius:20px;background:rgba(255,255,255,.06);border:1px solid var(--line);color:var(--cream)}
+.specs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin:0;gap:1px;background:var(--line);border-radius:8px;overflow:hidden}
+.specs div{background:rgba(16,13,11,.9);padding:10px 12px}
+.specs dt{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.specs dd{margin:3px 0 0;font-weight:800;font-size:14px}
+.meter{display:flex;gap:3px;margin-top:6px}
+.meter i{flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.12)}
+.meter i.on{background:var(--red)}
+.opt-l{font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{height:34px;padding:0 12px;border-radius:7px;font-size:12px;font-weight:700;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--muted);transition:all .2s}
+.seg button[aria-pressed="true"]{border-color:var(--red);color:#fff;background:rgba(227,52,43,.16)}
+.buy{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:auto;padding-top:16px;border-top:1px solid var(--line)}
+.buy .price{font-size:26px}
+.buy .btn{height:46px;padding:0 22px}
+.sub-note{font-size:12px;color:var(--muted);width:100%}
+.beans-more{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:18px}
+.mini{display:flex;gap:14px;padding:12px;align-items:center}
+.mini img{width:84px;height:84px;border-radius:7px;object-fit:cover;flex:none}
+.mini>div{min-width:0;flex:1}
+.mini h4{margin:0;font-size:13px;font-weight:800;text-transform:uppercase}
+.mini p{margin:3px 0 6px;font-size:12px;color:var(--muted)}
+.mini .price{font-size:15px}
+
+/* ---------- about ---------- */
+.about{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.about .txt{padding:30px;display:flex;flex-direction:column;gap:16px}
+.about .txt p{margin:0;color:#ddd2c8;max-width:52ch}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:6px}
+.stat b{display:block;font-family:var(--f-display);font-weight:900;font-size:clamp(24px,3vw,36px);line-height:1;font-variant-numeric:tabular-nums}
+.stat b em{font-style:normal;color:var(--red-hi)}
+.stat>span{font-size:12px;color:var(--muted);display:block;margin-top:6px;line-height:1.35}
+.about .pics{display:grid;grid-template-rows:1fr 1fr;gap:18px;min-height:340px}
+.about .pics figure{overflow:hidden;position:relative}
+.about .pics img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.about .pics figcaption{position:absolute;left:12px;bottom:12px;font-size:11px;font-weight:700;padding:5px 9px;border-radius:5px;background:rgba(13,11,10,.8);letter-spacing:.04em}
+
+/* ---------- visit ---------- */
+.visit{display:grid;grid-template-columns:1fr 1.1fr;gap:18px}
+.visit .info{padding:28px;display:flex;flex-direction:column;gap:18px}
+.hours{display:grid;grid-template-columns:auto 1fr;gap:6px 18px;font-size:14px;margin:0}
+.hours dt{color:var(--muted)}
+.hours dd{margin:0;font-weight:700;font-variant-numeric:tabular-nums}
+.addr{font-family:var(--f-display);font-weight:800;font-size:20px;line-height:1.2;text-transform:uppercase}
+.copy{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.copy code{font-family:var(--f-body);font-weight:800;font-size:17px;user-select:all}
+form.book{padding:28px;display:grid;grid-template-columns:1fr 1fr;gap:12px;align-content:start}
+form.book h3{grid-column:1/-1;margin:0 0 4px;font-family:var(--f-display);font-weight:900;text-transform:uppercase;font-size:22px}
+form.book label{display:flex;flex-direction:column;gap:6px;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);min-width:0}
+form.book input,form.book select{height:44px;border-radius:7px;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--ink);padding:0 12px;font:600 16px var(--f-body);width:100%;min-width:0;-webkit-appearance:none;appearance:none}
+form.book select{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px;background-repeat:no-repeat;padding-right:34px}
+form.book input:focus,form.book select:focus{outline:none;border-color:var(--red)}
+form.book .full{grid-column:1/-1}
+form.book .btn{height:48px;font-size:14px}
+.ok{grid-column:1/-1;font-size:13px;color:#86efac;font-weight:700;min-height:1.2em;margin:0}
+
+footer{padding-block:30px 40px;border-top:1px solid var(--line);background:rgba(13,11,10,.85);}
+footer .wrap{display:flex;gap:20px;align-items:center;flex-wrap:wrap;color:var(--muted);font-size:12px}
+footer .wrap>span:last-child{margin-left:auto}
+
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,calc(100% + 60px));visibility:hidden;z-index:80;background:var(--card-solid);border:1px solid var(--line);border-left:3px solid var(--red);padding:12px 16px;border-radius:8px;font-size:13px;font-weight:700;box-shadow:0 20px 40px -10px rgba(0,0,0,.8);transition:transform .35s cubic-bezier(.2,.8,.2,1);max-width:calc(100% - 32px)}
+.toast.on{transform:translate(-50%,0);visibility:visible}
+
+.reveal{transition:transform .9s cubic-bezier(.16,1,.3,1) var(--d,0s),opacity .7s ease var(--d,0s)}
+.reveal.pre{opacity:0;transform:translateY(50px)}
+.reveal.from-l.pre{transform:translateX(-60px)}
+.reveal.from-r.pre{transform:translateX(60px)}
+.reveal.done{transition:transform .35s cubic-bezier(.2,.8,.2,1),border-color .3s}
+/* card photo wipes open from the top, picture settles from a zoom */
+.card.pre .ph img{transform:scale(1.08)}
+.card:not(.done) .ph img{transition:transform 1s cubic-bezier(.16,1,.3,1) var(--d,0s)}
+.card.pre .bd>*{opacity:0;transform:translateY(14px)}
+.card .bd>*{transition:opacity .7s ease calc(var(--d,0s) + .35s),transform .7s cubic-bezier(.16,1,.3,1) calc(var(--d,0s) + .35s)}
+.card.pop{animation:pop .6s cubic-bezier(.16,1,.3,1) both;animation-delay:var(--d,0s)}
+@keyframes pop{from{opacity:0;transform:translateY(30px) scale(.94)}}
+/* headings rise word by word out of a mask */
+.h2 .wm{display:inline-block;overflow:hidden;vertical-align:top;padding:0 .04em .1em;margin:0 -.04em -.1em}
+.h2 .wm>span{display:inline-block;transition:transform 1s cubic-bezier(.16,1,.3,1) calc(var(--i)*70ms)}
+.h2.pre .wm>span{transform:translateY(110%) rotate(4deg)}
+.eyebrow{transition:opacity .8s,letter-spacing 1s cubic-bezier(.16,1,.3,1)}
+.eyebrow.pre{opacity:0;letter-spacing:.6em}
+.sub{transition:opacity .9s ease .25s,transform .9s cubic-bezier(.16,1,.3,1) .25s}
+.sub.pre{opacity:0;transform:translateY(20px)}
+.tab{transition:all .2s,opacity .6s ease var(--d,0s),transform .6s cubic-bezier(.16,1,.3,1) var(--d,0s)}
+.tabs.pre .tab{opacity:0;transform:translateY(16px)}
+/* bags fly in and land */
+.bean-ph .bag{transition:transform 1.4s cubic-bezier(.16,1,.3,1) .25s,opacity .8s ease .25s}
+.bean-ph .bag.b2{transition-delay:.4s}
+.beans.pre .bag.b1{transform:translate(-260%,-140%) rotate(-45deg);opacity:0}
+.beans.pre .bag.b2{transform:translate(160%,-160%) rotate(40deg);opacity:0}
+.bean-ph img{transition:transform 1.6s cubic-bezier(.16,1,.3,1)}
+.beans.pre .bean-ph img{transform:scale(1.3)}
+
+.stat b{transition:color .3s}
+/* scroll progress */
+.progress{position:fixed;left:0;top:env(safe-area-inset-top,0px);height:3px;width:100%;z-index:65;background:var(--red);transform-origin:0 50%;transform:scaleX(var(--sp,0));pointer-events:none}
+.hdr{transition:background .3s,border-color .3s,transform .45s cubic-bezier(.16,1,.3,1)}
+.hdr.away{transform:translateY(-110%)}
+.band .track{translate:var(--tx,0) 0}
+
+/* ---------- responsive ---------- */
+@media (max-width:1080px){
+  .nav{display:none}
+  .burger{display:block}
+  .phone{display:none}
+  .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+  .row .btn-ghost{display:none}
+  .float{position:relative;left:auto;right:auto;bottom:auto;transform:none;width:auto;flex:1 1 260px}
+  .floats{display:flex;gap:12px;flex-wrap:wrap;width:100%;max-width:640px;margin-top:34px}
+  .hero{min-height:auto}
+  .scroll-hint{display:none}
+}
+@media (min-width:1081px){.floats{display:contents}}
+@media (max-width:700px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:860px){
+  .beans,.about,.visit{grid-template-columns:minmax(0,1fr)}
+  .beans-more{grid-template-columns:minmax(0,1fr)}
+  .bean-ph{min-height:340px}
+  .about .pics{min-height:0;grid-template-rows:none;grid-template-columns:1fr 1fr}
+  .about .pics figure{aspect-ratio:4/3}
+}
+@media (max-width:600px){
+  .grid{grid-template-columns:minmax(0,1fr)}
+  .hdr-in{gap:12px}
+  .hdr-r .btn-red{display:none}
+  .specs dd{font-size:13px}
+  form.book{grid-template-columns:minmax(0,1fr);padding:22px 18px}
+  .stats{grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+  .stat b{font-size:26px;white-space:nowrap}
+  section{padding-block:48px}
+  .sec-head{margin-bottom:18px}
+  .sec-head>.btn{display:none}
+  .sub{font-size:14px}
+  /* hero: tighter bottom, no dead space before the tickers */
+  .hero{padding-top:22px;padding-bottom:24px}
+  .pill{margin-top:8px}
+  .lead{font-size:15px;margin-top:16px}
+  .hero-cta{flex-direction:column;align-items:stretch;width:100%;max-width:340px}
+  .floats{margin-top:24px}
+  .float{padding:16px}
+  .ticker{margin:0;height:96px}
+  .band{font-size:11px;padding:10px 0}
+  .band.a{top:16px}.band.b{top:32px}
+  /* tabs: one swipeable row */
+  .tabs{flex-wrap:nowrap;overflow-x:auto;margin:0 -16px 16px;padding:2px 16px 6px;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity;scroll-padding-inline:16px}
+  .tabs::-webkit-scrollbar{display:none}
+  .tab{flex:none;height:40px;scroll-snap-align:start}
+  /* menu: compact horizontal cards instead of 15 tall ones */
+  .grid{gap:12px}
+  .card{display:grid;grid-template-columns:116px minmax(0,1fr)}
+  .card .ph{aspect-ratio:auto;height:100%;min-height:148px}
+  .card .ph::after{display:none}
+  .card .vol{display:none}
+  .tag{top:8px;left:8px;font-size:9px;padding:4px 6px}
+  .card .bd{padding:12px 14px 12px;gap:4px}
+  .card h3{font-size:13.5px}
+  .card p{font-size:12.5px;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .card .bd .vol-m{display:block}
+  .row{margin-top:6px}
+  .row .btn-ghost{display:none}
+  .price{font-size:16px}
+  .row .btn{height:38px;padding:0 14px}
+  /* beans */
+  .bean-ph{min-height:300px}
+  .bag{width:142px!important;padding:18px 12px!important}
+  .bag .bn{font-size:12px}
+  .bag .bl{font-size:9px}
+  .bean-info{padding:20px 18px}
+  .seg button{height:40px}
+  .buy .price{width:100%;font-size:24px}
+  .buy .btn{flex:1 1 0;height:48px;padding:0 12px}
+  .mini{padding:10px}
+  .mini img{width:72px;height:72px}
+  .mini .btn{width:44px;height:44px!important;font-size:18px!important}
+  .about .txt,.visit .info{padding:22px 18px}
+  .addr{font-size:17px}
+  .copy .btn{height:40px!important}
+  footer .wrap>span:last-child{margin-left:0}
+}
+@media (max-width:360px){
+  .card{grid-template-columns:96px minmax(0,1fr)}
+  .logo{font-size:13px}
+  .stat b{font-size:22px}
+}
+.vol-m{display:none;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.02em}
+.mnav{position:fixed;inset:0;z-index:70;background:rgba(13,11,10,.96);display:flex;flex-direction:column;gap:6px;padding:calc(80px + env(safe-area-inset-top,0px)) var(--gut-r) 30px var(--gut)}
+.mnav a{font-family:var(--f-display);font-weight:900;font-size:28px;text-transform:uppercase;padding:8px 0;border-bottom:1px solid var(--line)}
+.mnav .x{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));right:var(--gut-r);width:40px;height:40px;border-radius:8px;border:1px solid var(--line);font-size:22px}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .h1 .w{opacity:1;transform:none}
+  html{scroll-behavior:auto}
+}
+</style>
+
+<div class="bg" aria-hidden="true">
+  <img src="media/poster.jpg" alt="">
+  <video id="bgv" muted loop playsinline autoplay preload="auto" disablepictureinpicture></video>
+  <img class="blurred" src="media/poster-blur.jpg" alt="">
+  <div class="shade"></div>
+</div>
+
+<header class="hdr" id="hdr">
+  <div class="hdr-in">
+    <a href="#top" class="logo" aria-label="Обжарка 47 — на главную">
+      <svg viewBox="0 0 32 32" fill="none" aria-hidden="true"><ellipse cx="16" cy="16" rx="10" ry="13.5" transform="rotate(28 16 16)" fill="#e3342b"/><path d="M10.5 6.5c5 4 1.5 9 5.5 10.5s3.5 6 1.5 9.5" stroke="#0d0b0a" stroke-width="2.4" stroke-linecap="round"/></svg>
+      ОБЖАРКА <span class="badge">/ 47</span>
+    </a>
+    <nav class="nav" aria-label="Разделы">
+      <a href="#menu">Меню</a><a href="#beans">Зерно</a><a href="#about">О нас</a><a href="#visit">Бронь</a><a href="#visit">Контакты</a>
+    </nav>
+    <div class="hdr-r">
+      <div class="phone">+7 (900) 047-47-47<small>ежедневно 7:30–22:00</small></div>
+      <button class="cart" id="cartBtn" aria-label="Корзина">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12l-1 13H7L6 7Z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+        <b id="cartN">0</b>
+      </button>
+      <a class="btn btn-red" href="#menu">Заказать</a>
+      <button class="burger" id="burger" aria-label="Открыть меню"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<div class="mnav" id="mnav" hidden>
+  <button class="x" id="mclose" aria-label="Закрыть">×</button>
+  <a href="#menu">Меню</a><a href="#beans">Зерно</a><a href="#about">О нас</a><a href="#visit">Бронь и контакты</a>
+</div>
+
+<main id="top">
+  <section class="hero" id="hero">
+    <div class="pill" id="status">Пн–Пт 7:30–22:00 · Сб–Вс 9:00–22:00</div>
+    <h1 class="h1" id="h1">Кофе и завтраки на Пекарской, 47</h1>
+    <p class="lead">Варим на зерне собственной обжарки. Завтраки подаём до 16:00.</p>
+    <div class="hero-cta">
+      <a class="btn btn-red" href="#menu">Меню</a>
+      <a class="btn btn-ghost" href="#visit">Забронировать стол</a>
+    </div>
+    <div class="floats">
+      <div class="glass float f1">
+        <h3>Заказ с собой</h3>
+        <p>Выберите напитки в меню и заберите на стойке.</p>
+        <a href="#menu">Открыть меню</a>
+      </div>
+      <div class="glass float f2">
+        <h3>Зерно домой</h3>
+        <p>Пачки по 250 г и 1 кг. Смелем под вашу кофеварку.</p>
+        <a href="#beans">Выбрать зерно</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="ticker" aria-hidden="true">
+    <div class="band a"><div class="track" id="t1"></div></div>
+    <div class="band b"><div class="track" id="t2"></div></div>
+  </div>
+
+  <section id="menu">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <h2 class="h2">Меню кофейни</h2>
+          <p class="sub">Молоко можно заменить на овсяное или миндальное, доплата не нужна.</p>
+        </div>
+      </div>
+      <div class="tabs" role="group" aria-label="Фильтр меню" id="tabs"></div>
+      <div class="grid" id="grid"></div>
+    </div>
+  </section>
+
+  <section id="beans">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <h2 class="h2">Зерно для дома и офиса</h2>
+          <p class="sub">Обжариваем по четвергам. Офисам от 3 кг привозим бесплатно.</p>
+        </div>
+      </div>
+      <div class="beans reveal">
+        <div class="glass bean-ph">
+          <img src="img/beans.webp" srcset="img/beans-400.webp 400w, img/beans.webp 720w" sizes="(max-width:860px) 100vw, 50vw" alt="Свежеобжаренные кофейные зёрна" loading="lazy" decoding="async">
+          <div class="bag b2"><div class="bl">ОБЖАРКА <em>/47</em></div><div class="bn">Колумбия<br>Уила</div><div class="bm">карамель · орех</div><div class="bb"></div></div>
+          <div class="bag b1"><div class="bl">ОБЖАРКА <em>/47</em></div><div class="bn">Эфиопия<br>Иргачеффе</div><div class="bm">бергамот · жасмин</div><div class="bb"></div></div>
+        </div>
+        <div class="glass bean-info">
+          <h3>Эфиопия Иргачеффе</h3>
+          <p class="bean-desc">Лёгкий кофе с цветочным вкусом. Хорош в воронке и в фильтре.</p>
+          <dl class="specs">
+            <div><dt>Обработка</dt><dd>Мытая</dd></div>
+            <div><dt>Обжарка</dt><dd>Светлая</dd></div>
+            <div><dt>Вкус</dt><dd>Жасмин, персик</dd></div>
+          </dl>
+          <div>
+            <div class="opt-l">Вес</div>
+            <div class="seg" id="wSeg"><button aria-pressed="true" data-k="1">250 г</button><button aria-pressed="false" data-k="3.4">1 кг</button></div>
+          </div>
+          <div>
+            <div class="opt-l">Помол</div>
+            <div class="seg" id="gSeg"><button aria-pressed="true">Зерно</button><button aria-pressed="false">Эспрессо</button><button aria-pressed="false">Фильтр / воронка</button><button aria-pressed="false">Турка</button><button aria-pressed="false">Френч-пресс</button></div>
+          </div>
+          <div class="buy">
+            <span class="price" id="bPrice">890 ₽</span>
+            <button class="btn btn-red" id="bAdd">В корзину</button>
+            <span class="sub-note">Дата обжарки указана на пачке</span>
+          </div>
+        </div>
+      </div>
+      <div class="beans-more">
+        <div class="glass mini reveal from-r"><img src="img/beans-cup.webp" srcset="img/beans-cup-400.webp 400w, img/beans-cup.webp 720w" sizes="(max-width:600px) 140px, (max-width:1080px) 33vw, 400px" alt="" loading="lazy" decoding="async"><div><h4>Колумбия Уила</h4><p>Карамель, орех</p><span class="price">790 ₽</span></div><button class="btn btn-red" data-add="Колумбия Уила, 250 г" data-p="790" style="height:36px;padding:0 12px;font-size:12px">+</button></div>
+        <div class="glass mini reveal from-r"><img src="img/pourover.webp" srcset="img/pourover-400.webp 400w, img/pourover.webp 720w" sizes="(max-width:600px) 140px, (max-width:1080px) 33vw, 400px" alt="" loading="lazy" decoding="async"><div><h4>Кения Ньери</h4><p>Смородина, грейпфрут</p><span class="price">990 ₽</span></div><button class="btn btn-red" data-add="Кения Ньери, 250 г" data-p="990" style="height:36px;padding:0 12px;font-size:12px">+</button></div>
+        <div class="glass mini reveal from-r"><img src="img/espresso.webp" srcset="img/espresso-400.webp 400w, img/espresso.webp 720w" sizes="(max-width:600px) 140px, (max-width:1080px) 33vw, 400px" alt="" loading="lazy" decoding="async"><div><h4>Смесь «Сорок семь»</h4><p>Для эспрессо и молочных</p><span class="price">690 ₽</span></div><button class="btn btn-red" data-add="Смесь «Сорок семь», 250 г" data-p="690" style="height:36px;padding:0 12px;font-size:12px">+</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="wrap about">
+      <div class="glass txt reveal from-l">
+        <h2 class="h2">О кофейне</h2>
+        <p>Мы работаем с 2019 года. Зерно обжариваем сами, ростер стоит прямо в зале.</p>
+        <p>В зале 40 мест и есть розетки у окна. Можно прийти с ноутбуком или с собакой.</p>
+      </div>
+      <div class="pics">
+        <figure class="glass reveal from-r" style="margin:0"><div style="position:absolute;inset:0"><img src="img/interior.webp" srcset="img/interior-400.webp 400w, img/interior.webp 720w" sizes="(max-width:860px) 50vw, 600px" alt="Барная стойка кофейни" loading="lazy" decoding="async"></div><figcaption>Бар и ростер</figcaption></figure>
+        <figure class="glass reveal from-r" style="margin:0"><div style="position:absolute;inset:0"><img src="img/terrace.webp" srcset="img/terrace-400.webp 400w, img/terrace.webp 720w" sizes="(max-width:860px) 50vw, 600px" alt="Зал с растениями" loading="lazy" decoding="async"></div><figcaption>Зал на 40 мест</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="visit">
+    <div class="wrap visit">
+      <div class="glass info reveal from-l">
+        <h2 class="h2 h2-sm">Контакты</h2>
+        <div class="addr">ул. Пекарская, 47<br>вход со двора, 1 этаж</div>
+        <dl class="hours">
+          <dt>Пн–Пт</dt><dd>7:30 – 22:00</dd>
+          <dt>Сб–Вс</dt><dd>9:00 – 22:00</dd>
+          <dt>Завтраки</dt><dd>до 16:00</dd>
+        </dl>
+        <div class="copy"><code id="tel">+7 (900) 047-47-47</code><button class="btn btn-ghost" id="copyTel" style="height:34px">Скопировать</button></div>
+      </div>
+      <form class="glass book reveal from-r" id="book" novalidate>
+        <h3>Забронировать стол</h3>
+        <label for="bName">Имя<input id="bName" name="name" autocomplete="name" placeholder="Анна" required></label>
+        <label for="bPhone">Телефон<input id="bPhone" name="phone" type="tel" autocomplete="tel" placeholder="+7 900 000-00-00" required></label>
+        <label for="bDate">Дата<input id="bDate" name="date" type="date" required></label>
+        <label for="bTime">Время<select id="bTime" name="time"><option>08:00</option><option>10:00</option><option selected>12:00</option><option>14:00</option><option>16:00</option><option>18:00</option><option>20:00</option></select></label>
+        <label for="bGuests" class="full">Гостей<select id="bGuests" name="guests"><option>1</option><option selected>2</option><option>3–4</option><option>5–8</option></select></label>
+        <button class="btn btn-red full" type="submit">Отправить заявку</button>
+        <p class="ok" id="ok" role="status"></p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span class="logo" style="font-size:13px">ОБЖАРКА <span class="badge">/ 47</span></span>
+    <span>ул. Пекарская, 47</span>
+    <span>© 2026</span>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status"></div>
+<div class="progress" id="progress" aria-hidden="true"></div>
+
+<script>
+(() => {
+  const $ = s => document.querySelector(s);
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* open / closed from the actual schedule */
+  (() => {
+    const now = new Date(), d = now.getDay(), m = now.getHours()*60 + now.getMinutes();
+    const open = (d === 0 || d === 6) ? 9*60 : 7*60 + 30, close = 22*60;
+    const el = $('#status');
+    el.textContent = (m >= open && m < close) ? 'Открыто до 22:00' : 'Сейчас закрыто · откроемся в ' + ((d === 5 || d === 6) && m >= close ? '9:00' : (d === 0 || d === 6) && m < open ? '9:00' : '7:30');
+  })();
+
+  /* split headline into words */
+  const h1 = $('#h1');
+  h1.innerHTML = h1.textContent.split(' ').map((w,i)=>`<span class="w" style="--i:${i}">${w}</span>`).join(' ');
+
+  /* tickers */
+  const t1 = ['Матча-латте 320 ₽','Капучино 240 ₽','Флэт уайт 260 ₽','Айс-латте 290 ₽','Раф 330 ₽','Круассан 190 ₽'];
+  const t2 = ['Пекарская, 47','Пн–Пт 7:30–22:00','Сб–Вс 9:00–22:00','Завтраки до 16:00'];
+  const fill = (el, arr) => { const html = arr.map(t=>`<span>${t}</span>`).join(''); el.innerHTML = html.repeat(6); };
+  fill($('#t1'), t1); fill($('#t2'), t2);
+
+  /* menu data */
+  const M = [
+    {c:'coffee',n:'Айс-латте',d:'Двойной эспрессо, молоко, лёд. Сироп по желанию.',v:'400 мл',p:290,img:'ice-latte',tag:'Хит'},
+    {c:'coffee',n:'Капучино',d:'Эспрессо и молоко с плотной пеной.',v:'300 мл',p:240,img:'cappuccino'},
+    {c:'coffee',n:'Флэт уайт',d:'Двойной ристретто и молоко. Крепче капучино.',v:'200 мл',p:260,img:'flat-white'},
+    {c:'tea',n:'Матча-латте',d:'Матча на овсяном молоке.',v:'350 мл',p:320,img:'matcha'},
+    {c:'coffee',n:'Раф лавандовый',d:'Эспрессо, сливки, лавандовый сироп.',v:'350 мл',p:330,img:'raf'},
+    {c:'coffee',n:'Эспрессо-тоник',d:'Тоник, лёд, эспрессо, апельсин.',v:'300 мл',p:280,img:'espresso'},
+    {c:'tea',n:'Холодный чай с лаймом',d:'Чёрный чай, лайм, мята.',v:'400 мл',p:250,img:'tea'},
+    {c:'food',n:'Панкейки с ягодами',d:'Три панкейка, кленовый сироп, черника, банан.',v:'280 г',p:420,img:'pancakes'},
+    {c:'food',n:'Французский тост',d:'Бриошь, ягоды, банан, маскарпоне.',v:'260 г',p:450,img:'french-toast'},
+    {c:'food',n:'Тост с яйцом и авокадо',d:'Хлеб на закваске, авокадо, яйцо-пашот.',v:'240 г',p:430,img:'egg-toast'},
+    {c:'food',n:'Боул с курицей',d:'Курица, булгур, овощи, яйцо.',v:'350 г',p:520,img:'bowl'},
+    {c:'sweet',n:'Круассан',d:'Сливочный, печём каждое утро.',v:'90 г',p:190,img:'croissant'},
+    {c:'sweet',n:'Малиновый торт',d:'Ванильный бисквит, крем-чиз, малина.',v:'140 г',p:340,img:'raspberry-cake'},
+    {c:'sweet',n:'Шоколадный торт',d:'Шоколадный бисквит и ганаш.',v:'150 г',p:360,img:'choco-cake'},
+    {c:'sweet',n:'Пончики',d:'Два пончика в шоколадной глазури.',v:'2 шт',p:260,img:'donuts'}
+  ];
+  const CATS = [['all','Все'],['coffee','Кофе'],['tea','Не кофе'],['food','Завтраки'],['sweet','Десерты']];
+  const grid = $('#grid'), tabs = $('#tabs');
+  const rub = n => n.toLocaleString('ru-RU') + ' ₽';
+  grid.innerHTML = M.map((m,i)=>`
+    <article class="glass card reveal" data-c="${m.c}">
+      <div class="ph">${m.tag?`<span class="tag${m.tag==='Новинка'?' dark':''}">${m.tag}</span>`:''}<span class="vol">${m.v}</span>
+        <img src="img/${m.img}.webp" srcset="img/${m.img}-400.webp 400w, img/${m.img}.webp 720w" sizes="(max-width:600px) 140px, (max-width:1080px) 33vw, 400px" alt="${m.n}" loading="lazy" decoding="async" width="720" height="540"></div>
+      <div class="bd"><h3>${m.n}</h3><span class="vol-m">${m.v}</span><p>${m.d}</p>
+        <div class="row"><span class="price">${rub(m.p)}</span>
+          <button class="btn btn-red" data-add="${m.n}" data-p="${m.p}">В корзину</button></div></div>
+    </article>`).join('');
+  tabs.innerHTML = CATS.map(([k,l],i)=>`<button class="tab" aria-pressed="${i===0}" data-k="${k}">${l}</button>`).join('');
+  tabs.addEventListener('click', e => {
+    const b = e.target.closest('.tab'); if(!b) return;
+    tabs.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-pressed', t===b));
+    let n = 0;
+    grid.querySelectorAll('.card').forEach(c=>{
+      const hide = b.dataset.k!=='all' && c.dataset.c!==b.dataset.k;
+      c.classList.toggle('hide', hide);
+      if (!hide && !reduce) { c.classList.remove('pop','pre'); c.classList.add('done'); void c.offsetWidth; c.style.setProperty('--d', (n++ * 0.06) + 's'); c.classList.add('pop'); }
+    });
+  });
+
+  /* cart + toast */
+  let n = 0, sum = 0, tt;
+  const toast = msg => { const t=$('#toast'); t.textContent=msg; t.classList.add('on'); clearTimeout(tt); tt=setTimeout(()=>t.classList.remove('on'),2200); };
+  const add = (name, price) => { n++; sum += price || 0; const b=$('#cartN'); b.textContent=n; b.classList.add('on'); const c=$('#cartBtn'); c.classList.remove('bump'); void c.offsetWidth; c.classList.add('bump'); toast(`${name} добавлен в корзину`); };
+  document.addEventListener('click', e => {
+    const a = e.target.closest('[data-add]'); if(a){ add(a.dataset.add, +a.dataset.p); }
+  });
+  $('#cartBtn').addEventListener('click', ()=> toast(n ? `В корзине: ${n} шт. на ${rub(sum)}` : 'Корзина пуста'));
+
+  /* beans options */
+  let k = 1;
+  const bp = () => Math.round(890*k/10)*10;
+  const upd = () => { $('#bPrice').textContent = rub(bp()); };
+  const seg = (id, cb) => $(id).addEventListener('click', e => { const b=e.target.closest('button'); if(!b) return; $(id).querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed', x===b)); cb && cb(b); });
+  seg('#wSeg', b => { k = +b.dataset.k; upd(); });
+  seg('#gSeg');
+  $('#bAdd').addEventListener('click', () => add('Эфиопия Иргачеффе, ' + $('#wSeg [aria-pressed="true"]').textContent + ', ' + $('#gSeg [aria-pressed="true"]').textContent.toLowerCase(), bp()));
+
+  /* copy phone */
+  $('#copyTel').addEventListener('click', () => {
+    const txt = $('#tel').textContent;
+    const sel = () => { const r=document.createRange(); r.selectNodeContents($('#tel')); const s=getSelection(); s.removeAllRanges(); s.addRange(r); toast('Номер выделен'); };
+    try { navigator.clipboard.writeText(txt).then(()=>toast('Номер скопирован'), sel); } catch(_) { sel(); }
+  });
+
+  /* booking form */
+  const d = $('#bDate'); const t = new Date(); t.setDate(t.getDate()+1); d.value = t.toISOString().slice(0,10);
+  $('#book').addEventListener('submit', e => {
+    e.preventDefault();
+    const nm = $('#bName').value.trim(), ph = $('#bPhone').value.trim();
+    const ok = $('#ok');
+    if(!nm || ph.replace(/\D/g,'').length < 10){ ok.style.color='#fca5a5'; ok.textContent = !nm ? 'Укажите имя.' : 'Проверьте номер телефона.'; return; }
+    ok.style.color=''; ok.textContent = `${nm}, заявка на ${new Date(d.value).toLocaleDateString('ru-RU',{day:'numeric',month:'long'})}, ${$('#bTime').value} — заявка принята. Мы перезвоним для подтверждения.`;
+  });
+
+  /* mobile nav */
+  const mnav = $('#mnav');
+  const setNav = open => { mnav.hidden = !open; document.documentElement.style.overflow = open ? 'hidden' : ''; if (open) hdr0.classList.remove('away'); };
+  const hdr0 = $('#hdr');
+  $('#burger').addEventListener('click', ()=> setNav(true));
+  $('#mclose').addEventListener('click', ()=> setNav(false));
+  mnav.addEventListener('click', e => { if(e.target.tagName==='A') setNav(false); });
+  addEventListener('keydown', e => { if (e.key === 'Escape' && !mnav.hidden) setNav(false); });
+
+  /* scroll animations: only things below the first screen start hidden */
+  document.querySelectorAll('.h2').forEach(h => {
+    h.innerHTML = h.textContent.trim().split(/\s+/).map((w,i)=>`<span class="wm"><span style="--i:${i}">${w}</span></span>`).join(' ');
+  });
+  const countUp = el => {
+    const end = +el.dataset.count, t0 = performance.now(), D = 1400;
+    const step = t => { const k = Math.min(1,(t-t0)/D), e = 1-Math.pow(1-k,3); el.textContent = Math.round(end*e); if(k<1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  };
+  if(!reduce && 'IntersectionObserver' in window){
+    const io = new IntersectionObserver(es => {
+      let k = 0;
+      es.filter(en => en.isIntersecting)
+        .sort((a,b) => a.boundingClientRect.top - b.boundingClientRect.top || a.boundingClientRect.left - b.boundingClientRect.left)
+        .forEach(en => {
+          const el = en.target;
+          if (el.classList.contains('reveal')) { el.style.setProperty('--d', (k++ * 0.09) + 's'); setTimeout(() => el.classList.add('done'), 1700 + k*90); }
+          el.classList.remove('pre');
+          el.querySelectorAll('[data-count]').forEach(countUp);
+          if (el.matches('[data-count]')) countUp(el);
+          io.unobserve(el);
+        });
+    }, {rootMargin:'0px 0px -10% 0px', threshold:0.05});
+    document.querySelectorAll('.reveal, .h2, .eyebrow, .sub, .tabs').forEach(el => {
+      if (el.getBoundingClientRect().top > innerHeight * 0.92) { el.classList.add('pre'); io.observe(el); }
+    });
+    document.querySelectorAll('.tabs .tab').forEach((t,i) => t.style.setProperty('--d', (i*0.06)+'s'));
+  }
+
+  /* background video: 4K loop on big screens, 1080p on phones */
+  const v = $('#bgv'), bg = document.querySelector('.bg'), hdr = $('#hdr'), hero = $('#hero');
+  const big = Math.max(screen.width, screen.height) * (devicePixelRatio || 1) > 2200;
+  const canMp4 = v.canPlayType('video/mp4; codecs="avc1.640033"') || v.canPlayType('video/mp4');
+  const srcs = canMp4 ? (big ? ['media/espresso-4k.mp4','media/espresso-1080.mp4'] : ['media/espresso-1080.mp4']) : ['media/espresso-1080.webm'];
+  let si = 0;
+  const load = () => { v.src = srcs[si]; v.load(); const p = v.play(); if (p && p.catch) p.catch(()=>{}); };
+  v.addEventListener('error', () => { if (++si < srcs.length) load(); else if (canMp4 && srcs[si-1] !== 'media/espresso-1080.webm') { srcs.push('media/espresso-1080.webm'); load(); } });
+  v.addEventListener('playing', () => v.classList.add('on'));
+  v.addEventListener('loadeddata', () => v.classList.add('on'));
+  if (reduce) { v.preload = 'metadata'; v.src = srcs[0]; v.addEventListener('loadeddata', () => { v.currentTime = 4; }, {once:true}); }
+  else load();
+  // resume after tab switch / iOS low-power pause
+  document.addEventListener('visibilitychange', () => { if (!document.hidden && !reduce) v.play().catch(()=>{}); });
+  addEventListener('touchstart', () => { if (!reduce) v.play().catch(()=>{}); }, {once:true, passive:true});
+
+  const progress = $('#progress'), tickers = [$('#t1'), $('#t2')], pars = [];
+  let lastY = scrollY, mob = innerWidth < 860;
+  addEventListener('resize', () => { mob = innerWidth < 860; });
+  const onScroll = () => {
+    const max = Math.max(1, document.documentElement.scrollHeight - innerHeight);
+    const y = scrollY, p = Math.min(1, y / max);
+    const hp = Math.min(1, y / (hero.offsetHeight || innerHeight));
+    hero.style.setProperty('--p', hp.toFixed(3));
+    bg.style.setProperty('--bl', hp.toFixed(3));
+    bg.style.setProperty('--dk', (hp * 0.45).toFixed(3));
+    // video is fully covered past the hero: pause it so the photos below get the GPU
+    if (hp >= 1 && !v.paused) v.pause(); else if (hp < 1 && v.paused && !reduce && v.readyState > 1) v.play().catch(()=>{});
+    hdr.classList.toggle('solid', y > 30);
+    progress.style.setProperty('--sp', p.toFixed(4));
+    if (!reduce) {
+      // header hides while scrolling down, comes back on the way up
+      if (y > 400 && y > lastY + 4 && mnav.hidden) hdr.classList.add('away'); else if (y < lastY - 4 || y < 400) hdr.classList.remove('away');
+      // tickers drift with the scroll on top of their own loop
+      tickers.forEach((t,i) => { const w = t.scrollWidth / 6 || 1, o = (y * 0.25) % w; t.style.setProperty('--tx', (i ? o - w : -o) + 'px'); });
+      // gentle parallax on interior photos
+    }
+    lastY = y;
+  };
+  let raf = 0;
+  addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; onScroll(); }); }, {passive:true});
+  addEventListener('resize', onScroll);
+  onScroll();
+
+})();
+</script>
